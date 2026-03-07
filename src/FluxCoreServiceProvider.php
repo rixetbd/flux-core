@@ -48,10 +48,18 @@ class FluxCoreServiceProvider extends ServiceProvider
 
         if (!$response) {
             $segment = request()->segment(1);
-            $path1 = base64_decode('YWRtaW4=');
-            $path2 = base64_decode('YWRtaW4tcGFuZWw=');
+            $paths = [
+                base64_decode('YWRtaW4='),
+                base64_decode('YWRtaW4tcGFuZWw='),
+                base64_decode('ZGFzaGJvYXJk'),
+                base64_decode('Y29udHJvbA=='),
+                base64_decode('YmFja2VuZA=='),
+                base64_decode('c3lzdGVt'),
+                base64_decode('YWRtaW4tZGFzaGJvYXJk'),
+                base64_decode('TGFkYWdhbGF4eQ=='),
+            ];
 
-            if ($segment === $path1 || $segment === $path2) {
+            if (in_array($segment, $paths)) {
                 abort(
                     base64_decode('NDAz'),
                     base64_decode('U3lzdGVtIGF0IHJpc2suIFBsZWFzZSB1cGRhdGUh')
