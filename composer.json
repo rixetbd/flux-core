@@ -1,0 +1,32 @@
+{
+    "name": "rixetbd/flux-core",
+    "description": "Laravel package for license & code base management with advanced validation",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rixetbd\\FluxCore\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "DevRabiul",
+            "email": "devrabiul@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rixetbd\\FluxCore\\FluxCoreServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
