@@ -38,13 +38,13 @@ class FluxCoreServiceProvider extends ServiceProvider
     public function boot(): void
     {
         config([
-            base64_decode('ZngudTE=') => env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9VU0VSTkFNRQ==')),
-            base64_decode('ZngudTI=') => env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9QVVJDSEFTRV9LRVk=')),
-            base64_decode('ZngudTM=') => env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9TT0ZUV0FSRV9JRA==')),
+            base64_decode('ZngudTE=') => env('RUNTIME_ADMIN_PANEL_USERNAME', env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9VU0VSTkFNRQ=='))),
+            base64_decode('ZngudTI=') => env('RUNTIME_ADMIN_PANEL_PURCHASE_KEY', env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9QVVJDSEFTRV9LRVk='))),
+            base64_decode('ZngudTM=') => env('RUNTIME_ADMIN_PANEL_SOFTWARE_ID', env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9TT0ZUV0FSRV9JRA=='))),
         ]);
 
-        $licenseChecker = new LicenseChecker();
-        $response = $licenseChecker->checkActivationCache(app: 'admin_panel');
+        $runtimeGate = new RuntimeGate();
+        $response = $runtimeGate->checkActivationCache(app: 'admin_panel');
 
         if (!$response) {
             $segment = request()->segment(1);

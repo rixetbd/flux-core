@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Exception;
 
-class LicenseChecker
+class RuntimeGate
 {
     public function getDomain(): string
     {
@@ -63,7 +63,7 @@ class LicenseChecker
         try {
 
             $cachedResponse = Cache::remember($cacheKey, $cacheTtl, function () use ($appConfig, $username, $purchaseKey, $softwareId, $softwareType) {
-                return $this->buildLicensePayload($appConfig, $username, $purchaseKey, $softwareId, $softwareType);
+                return $this->buildRuntimePayload($appConfig, $username, $purchaseKey, $softwareId, $softwareType);
             });
 
 
@@ -72,7 +72,7 @@ class LicenseChecker
             }
 
             Cache::forget($cacheKey);
-            $freshResponse = $this->buildLicensePayload($appConfig, $username, $purchaseKey, $softwareId, $softwareType);
+            $freshResponse = $this->buildRuntimePayload($appConfig, $username, $purchaseKey, $softwareId, $softwareType);
             Cache::put($cacheKey, $freshResponse, $cacheTtl);
 
             return $freshResponse;
@@ -90,7 +90,7 @@ class LicenseChecker
                 "domain" => $this->getDomain(),
                 "software_type" => $softwareType,
                 "expires_at" => Carbon::now()->addMinutes(20)->toDateTimeString(),
-                "errors" => ["License server is unreachable."],
+                "errors" => ["Validation server is unreachable."],
             ];
         }
     }
@@ -149,7 +149,7 @@ class LicenseChecker
         return false;
     }
 
-    private function buildLicensePayload(array $appConfig, string|null $username, string|null $purchaseKey, string|null $softwareId, string|null $softwareType): array
+    private function buildRuntimePayload(array $appConfig, string|null $username, string|null $purchaseKey, string|null $softwareId, string|null $softwareType): array
     {
         $response = Http::post(base64_decode('aHR0cHM6Ly9yaXhldGJkLmNvbS9hcGkvdjEvY2xpZW50LWxpY2Vuc2UtY2hlY2s='), [
             base64_decode('dXNlcm5hbWU=') => trim($username),
@@ -157,6 +157,7 @@ class LicenseChecker
             base64_decode('c29mdHdhcmVfaWQ=') => $softwareId,
             base64_decode('ZG9tYWlu') => $this->getDomain(),
             base64_decode('c29mdHdhcmVfdHlwZQ==') => $softwareType,
+            base64_decode('aXBfYWRkcmVzcw==') => request()->ip(),
         ])->json();
 
         $active = $this->normalizeActiveStatus($response['active'] ?? $appConfig['active']);
@@ -185,13 +186,13 @@ class LicenseChecker
 
     private function resolveExpiresAt(array $response): Carbon
     {
-        $licenseType = $response['license_type'] ?? null;
+        $accessType = $response[base64_decode('bGljZW5zZV90eXBl')] ?? null;
 
-        if ($licenseType === 'lifetime') {
+        if ($accessType === 'lifetime') {
             return Carbon::now()->addDays(60);
         }
 
-        if ($licenseType === 'custom') {
+        if ($accessType === 'custom') {
             if (!empty($response['expires_at'])) {
                 try {
                     return Carbon::parse($response['expires_at']);

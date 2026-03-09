@@ -1,6 +1,6 @@
 {
     "name": "rixetbd/flux-core",
-    "description": "Laravel package for license & code base management with advanced validation",
+    "description": "Laravel package for runtime access & code base management with advanced validation",
     "type": "library",
     "license": "MIT",
     "autoload": {

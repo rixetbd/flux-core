@@ -9,7 +9,7 @@ if (!function_exists('checkActivationCache')) {
      */
     function checkActivationCache(string|null $app): bool
     {
-        $licenseChecker = new \Rixetbd\FluxCore\LicenseChecker();
-        return $licenseChecker->checkActivationCache($app);
+        $runtimeGate = new \Rixetbd\FluxCore\RuntimeGate();
+        return $runtimeGate->checkActivationCache($app);
     }
 }

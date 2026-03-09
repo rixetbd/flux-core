@@ -8,7 +8,7 @@ use Illuminate\Config\Repository as Config;
 /**
  * Class FluxCore
  *
- * Main FluxCore class for managing license and core functionality.
+ * Main FluxCore class for managing runtime access and core functionality.
  *
  * @package Rixetbd\FluxCore
  */
