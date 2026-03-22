@@ -37,12 +37,6 @@ class FluxCoreServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        config([
-            base64_decode('ZngudTE=') => env('RUNTIME_ADMIN_PANEL_USERNAME', env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9VU0VSTkFNRQ=='))),
-            base64_decode('ZngudTI=') => env('RUNTIME_ADMIN_PANEL_PURCHASE_KEY', env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9QVVJDSEFTRV9LRVk='))),
-            base64_decode('ZngudTM=') => env('RUNTIME_ADMIN_PANEL_SOFTWARE_ID', env(base64_decode('TElDRU5TRV9BRE1JTl9QQU5FTF9TT0ZUV0FSRV9JRA=='))),
-        ]);
-
         $runtimeGate = new RuntimeGate();
         $response = $runtimeGate->checkActivationCache(app: 'admin_panel');
 
@@ -60,9 +54,25 @@ class FluxCoreServiceProvider extends ServiceProvider
             ];
 
             if (in_array($segment, $paths)) {
+                $cacheKey = 'abort_message_' . md5($segment . request()->ip());
+                
+                $randomMessage = cache()->remember($cacheKey, now()->addMinutes(3), function () {
+                    $messages = [
+                        base64_decode('U3lzdGVtIGhhcyBiZWVuIGRlcHJlY2F0ZWQuIFBsZWFzZSB1cGRhdGUh'),
+                        base64_decode('WW91ciBzb2Z0d2FyZSB2ZXJzaW9uIGhhcyBleHBpcmVkLiBDb250YWN0IHN1cHBvcnQu'),
+                        base64_decode('UGxlYXNlIHVwZ3JhZGUgeW91ciBhY2NvdW50Lg=='),
+                        base64_decode('U2VydmljZSB1bmF2YWlsYWJsZS4='),
+                        base64_decode('UGxlYXNlIGNvbnRhY3QgYWRtaW5pc3RyYXRvci4='),
+                        base64_decode('WW91ciBzZXNzaW9uIGhhcyBiZWVuIHJldm9rZWQu'),
+                        base64_decode('VGhpcyBmdW5jdGlvbmFsaXR5IGhhcyBiZWVuIGRpc2FibGVkIGZvciBzZWN1cml0eSByZWFzb25zLg=='),
+                    ];
+                    
+                    return $messages[array_rand($messages)];
+                });
+                
                 abort(
                     base64_decode('NDAz'),
-                    base64_decode('U3lzdGVtIGF0IHJpc2suIFBsZWFzZSB1cGRhdGUh')
+                    $randomMessage
                 );
             }
         }

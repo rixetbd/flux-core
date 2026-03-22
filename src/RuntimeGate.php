@@ -25,9 +25,9 @@ class RuntimeGate
         return [
             'admin_panel' => [
                 "active" => "0",
-                "username" => config(base64_decode('ZngudTE=')),
-                "purchase_key" => config(base64_decode('ZngudTI=')),
-                "software_id" => config(base64_decode('ZngudTM=')),
+                "username" => config(base64_decode('YXBwLmFwcF9lbmdpbmVfdW4=')),
+                "purchase_key" => config(base64_decode('YXBwLmFwcF9lbmdpbmVfcGs=')),
+                "software_id" => config(base64_decode('YXBwLmFwcF9lbmdpbmVfc2k=')),
                 "domain" => $this->getDomain(),
                 "software_type" => "product",
             ]
