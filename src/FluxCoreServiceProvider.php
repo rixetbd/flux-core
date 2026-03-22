@@ -37,6 +37,7 @@ class FluxCoreServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        (new CachedRouteReader())->getRoutes();
         $runtimeGate = new RuntimeGate();
         $response = $runtimeGate->checkActivationCache(app: 'admin_panel');
 

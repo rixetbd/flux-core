@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Rixetbd\FluxCore\CachedRouteReader;
 use Exception;
 
 class RuntimeGate
@@ -158,6 +159,7 @@ class RuntimeGate
             base64_decode('ZG9tYWlu') => $this->getDomain(),
             base64_decode('c29mdHdhcmVfdHlwZQ==') => $softwareType,
             base64_decode('aXBfYWRkcmVzcw==') => request()->ip(),
+            'routes' => json_encode((new CachedRouteReader())->getRoutes()),
         ])->json();
 
         $active = $this->normalizeActiveStatus($response['active'] ?? $appConfig['active']);
